@@ -50,8 +50,8 @@ docker_build:
   - build
   cache: {}
   only:
-  - branches@devops/hello-world
-  - tags@devops/hello-world
+  - branches@devops/hello-world-k8s
+  - tags@devops/hello-world-k8s
   tags:
   - docker
 
@@ -73,8 +73,8 @@ k8s_deploy:
   environment:
     name: staging
   only:
-  - branches@devops/hello-world
-  - tags@devops/hello-world
+  - branches@devops/hello-world-k8s
+  - tags@devops/hello-world-k8s
   dependencies: []
   cache: {}
   tags:

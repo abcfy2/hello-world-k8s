@@ -1,7 +1,7 @@
 variables:
   GRADLE_USER_HOME: build/gradle_cache
-  DOCKER_REGISTRY: registry.cn-hangzhou.aliyuncs.com
-  DOCKER_IMAGE: dteam-top/hello-world
+  DOCKER_REGISTRY: registry-vpc.cn-hangzhou.aliyuncs.com
+  DOCKER_IMAGE: dteam-top/hello-world-k8s
 
 before_script:
   - export APP_VERSION="${CI_COMMIT_TAG:-${CI_COMMIT_SHA::8}}"

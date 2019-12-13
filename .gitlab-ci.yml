@@ -34,7 +34,7 @@ test:
   stage: test
   image: openjdk:8-jdk-alpine
   script:
-  - ./gradlew -i --no-daemon test
+  - ./gradlew -i --no-daemon test --fail-fast
   tags:
   - docker
 

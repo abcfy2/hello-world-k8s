@@ -59,16 +59,17 @@ k8s_deploy:
   stage: deploy
   image: lwolf/helm-kubectl-docker:v1.16.2-v2.14.3
   script:
-    - sed -i "s#__DOCKER_REGISTRY__#${DOCKER_REGISTRY}#g;s#__APP_VERSION__#${APP_VERSION:-latest}#g" deploy-*.yml
-    - kubectl create secret docker-registry ${DOCKER_REGISTRY}-regcred
-         --docker-server=${DOCKER_REGISTRY} --docker-username=${DOCKER_REGISTRY_USER}
-         --docker-password=${DOCKER_REGISTRY_PASSWORD} --docker-email=noreply@example.com
-         --save-config --dry-run -o yaml | kubectl apply --namespace=${KUBE_NAMESPACE} -f -
-    - kubectl apply --namespace=${KUBE_NAMESPACE} -f deploy-${SERVICE}.yml
-    - kubectl rollout status --namespace=${KUBE_NAMESPACE} -w --timeout=60s deployment/${SERVICE}-deployment
+  - '[ -n "${KUBE_CONFIG_CONTENT}" ] && mkdir -p "${HOME}/.kube" && echo "${KUBE_CONFIG_CONTENT}" > "${HOME}/.kube/config"'
+  - sed -i "s#__DOCKER_REGISTRY__#${DOCKER_REGISTRY}#g;s#__DOCKER_IMAGE__#${DOCKER_IMAGE}#g;s#__APP_VERSION__#${APP_VERSION:-latest}#g" deploy-*.yml
+  - kubectl create secret docker-registry ${DOCKER_REGISTRY}-regcred
+       --docker-server=${DOCKER_REGISTRY} --docker-username=${DOCKER_REGISTRY_USER}
+       --docker-password=${DOCKER_REGISTRY_PASSWORD} --docker-email=noreply@example.com
+       --save-config --dry-run -o yaml | kubectl apply --namespace=${KUBE_NAMESPACE} -f -
+  - kubectl apply --namespace=${KUBE_NAMESPACE} -f deploy-${SERVICE}.yml
+  - kubectl rollout status --namespace=${KUBE_NAMESPACE} -w --timeout=60s deployment/${SERVICE}-deployment
   variables:
     KUBE_NAMESPACE: default
-    SERVICE: hello-world
+    SERVICE: hello-world-k8s
   when: manual
   environment:
     name: staging
